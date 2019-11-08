@@ -24,3 +24,8 @@ if (cluster.isMaster) {
 
     }).listen(3000)
 }
+
+// 退出重启
+cluster.on('exit', (work) => {
+    cluster.fork();
+})
