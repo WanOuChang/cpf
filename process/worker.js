@@ -7,7 +7,7 @@ let childServer = http.createServer((req, res) => {
 
 // 接收主进程数据
 process.on('message', (flig, server) => {
-    if (flig === "server") {
+    if (flig === "server" && server) {
         // 将子进程服务关联到主进程服务 TCP流
         server.on('connection', socket => {
             childServer.emit('connection', socket)

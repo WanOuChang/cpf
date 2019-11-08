@@ -1,19 +1,19 @@
 const http = require('http');
 const fs = require('fs');
 
-let type = {
+let types = {
     '/json': 'application/json',
     '/txt': 'text/plain;charset=utf-8',
     '/jpg': 'image/jpeg'
 }
 
 const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': type[req.url] });
+    res.writeHead(200, { 'Content-Type': types[req.url] });
     if (req.url === '/json') {
-        console.log('json')
+        console.log('/json')
         res.end(JSON.stringify({ code: 1, title: '玩偶' }))
     } else if (req.url === '/txt') {
-        res.end('玩偶')
+        res.end('111')
     } else if (req.url === "/jpg") {
         let bufimg = fs.readFileSync('./3.jpg')
         res.end(bufimg)

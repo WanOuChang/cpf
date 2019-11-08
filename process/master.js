@@ -6,8 +6,11 @@ const child_process = require('child_process');
 let cpuLen = require('os').cpus().length;
 // 创建服务
 let server = http.createServer();
+// 监听端口号
+server.listen(3000);
 // 子进程集
 let workers = {};
+
 
 // 封装创建子进程方法
 function createWorker() {
@@ -15,7 +18,7 @@ function createWorker() {
     let worker = child_process.fork("./worker.js");
     workers[worker.pid] = worker;
 
-    console.log(worker);
+    console.log(workers);
     // 将创建好的服务发送给子进程
     worker.send('server', server)
         // 接收子进程捕获的异常错误

@@ -13,6 +13,7 @@ function createWorker() {
     console.log(fs.existsSync(filePath))
     if (fs.existsSync(filePath)) {
         // 创建子进程
+        console.log(12)
         let child = child_process.spawn('node', [filePath]);
         child.stdout.on('data', data => {
             console.log(data.toString())
@@ -28,10 +29,12 @@ function createWorker() {
 
 }
 
+// 监听
 let watcher = fs.watch(filePath);
 
 watcher.on('change', () => {
-    // 杀掉子进程
+    console.log(1)
+        // 杀掉子进程
     childProcess.kill();
     // 创建子进程
     childProcess = createWorker();
