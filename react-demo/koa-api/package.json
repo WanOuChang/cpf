@@ -1,18 +1,18 @@
 {
-    "name": "process",
+    "name": "koa-api",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "bin": {
-        "cpf-download": "./download.js"
-    },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "download-git-repo": "^3.0.2"
+        "koa-bodyparser": "^4.2.1",
+        "koa-router": "^7.4.0",
+        "koa-static": "^5.0.0",
+        "mysql": "^2.17.1"
     }
 }
