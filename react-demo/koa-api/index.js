@@ -10,7 +10,8 @@ const static = require('koa-static');
 const router = require('koa-router')();
 // 引入处理路径内置模块
 const path = require('path');
-const { put } = require('./controller/index')
+
+const query = require("./controller/query")
 
 
 // 使用 解析post请求中间件
@@ -23,50 +24,43 @@ app.use(static(path.join(process.cwd(), "public")));
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+// 3. /put（新增）, /del（删除）, /update（修改）, /bookslist（列表）
+
+
 // 添加
-router.post("/api/put", put)
+router.post("/api/put", async ctx => {
+    console.log(ctx.request.body)
+    let { create_time, title, author, significance, reading_num, status } = ctx.request.body;
+    let data = await query(`insert into koalist (create_time,title,author,significance,reading_num,status) values (?,?,?,?,?,?)`, [create_time, title, author, significance, reading_num, status])
+    console.log(data)
+    if (data) {
+        ctx.body = { code: 1, msg: data }
+    } else {
+        ctx.body = { code: 0, msg: '添加失败' }
+    }
+})
 
 // 修改
-// router.post("/api/update", async(ctx, next) => {
-//     let { create_time, title, author, significance, reading_num, status } = ctx.request.body;
-//     let res = await new Promise((resolve, reject) => {
-//         connect.query(`insert into koaList (create_time, title, author, significance, reading_num, status) values (?,?,?,?,?,?)`, [create_time, title, author, significance, reading_num, status], (error, data) => {
-//             if (error) {
-//                 reject(error);
-//             } else {
-//                 console.log(data)
-//                 resolve(data);
-//             }
-//         })
-//     })
-//     ctx.body = res;
-// })
-
+router.post('/api/update', async ctx => {
+    let { create_time, title, author, significance, reading_num, status, id } = ctx.request.body;
+    let data = await query('UPDATE koalist set create_time=?,title=?,author=?,significance=?,reading_num=?,status=? where id=?', [create_time, title, author, significance, reading_num, status, id])
+    if (data) {
+        ctx.body = { code: 1, msg: data }
+    } else {
+        ctx.body = { code: 0, msg: '修改失败' }
+    }
+})
 
 // 删除
-// router.get("/api/del", async(ctx, next) => {
-
-// })
-
-// 列表
-// router.get("/api/bookslist", async(ctx, next) => {
-//     let res = await new Promise((resolve, reject) => {
-//         connect.query('select * from koaList', (error, data) => {
-//             if (error) {
-//                 reject(error);
-//             } else {
-//                 console.log(data)
-//                 resolve(data);
-//             }
-//         })
-//     })
-//     console.log(res)
-//     ctx.body = res;
-// })
-
-
-
-
+router.get("/api/del", async ctx => {
+    let { id } = ctx.query;
+    let data = await query('DELETE FROM koalist WHERE id=?', [id])
+    if (data) {
+        ctx.body = { code: 1, msg: data }
+    } else {
+        ctx.body = { code: 0, msg: '删除失败' }
+    }
+})
 
 
 // 启动监听服务

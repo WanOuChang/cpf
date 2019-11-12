@@ -1,8 +1,17 @@
-const { query } = require('../config/index');
+const mysql = require('mysql');
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    port: '3306',
+    database: 'koa-review'
+})
+connection.connect(error => {
+    if (error) {
+        console.log('数据库连接失败')
+    } else {
+        console.log('数据库连接成功')
+    }
+});
 
-module.exports.put = async ctx => {
-    const $sql = `insert into koalist (create_time, title, author, significance, reading_num, status) values (?,?,?,?,?,?)`;
-    const $params = ctx.request.body;
-    const results = await query($sql, $params);
-    console.log(results)
-}
+module.exports = connection;
