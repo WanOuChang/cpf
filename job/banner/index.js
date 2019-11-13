@@ -13,17 +13,21 @@ app.use(router.allowedMethods());
 
 // 查询
 router.get('/api/getList', async ctx => {
+    let { pagenum = 1, limit = 2 } = ctx.query;
+    let startIndex = (pagenum - 1) * limit;
+    let totalData = await query('select count(*) from banner_list')
     try {
-        let data = await query('select * from banner_list')
+        let data = await query(`select * from banner_list limit ${startIndex},${limit}`)
         ctx.body = {
             code: 1,
             msg: 'success',
-            data: data.data
+            data,
+            total: totalData[0]["count(*)"],
         }
     } catch (error) {
         ctx.body = {
             code: 0,
-            msg: error.error
+            msg: error
         }
     }
 })
@@ -41,7 +45,7 @@ router.get('/api/del', async ctx => {
         } catch (error) {
             ctx.body = {
                 code: 0,
-                msg: error.error
+                msg: error
             }
         }
     } else {
@@ -54,10 +58,12 @@ router.get('/api/del', async ctx => {
 
 // 添加
 router.post('/api/add', async ctx => {
-    let { serial_num, remarks, types, sort, create_time } = ctx.request.body;
+    let create_time = new Date();
+    let { serial_num, remarks, types, sort } = ctx.request.body;
     if (remarks && types && serial_num) {
         let data = await query('select * from banner_list where serial_num=?', [serial_num]);
-        if (data.data.length) {
+        console.log(data)
+        if (data.length) {
             ctx.body = {
                 code: 3,
                 msg: '此用户已存在',
@@ -72,7 +78,7 @@ router.post('/api/add', async ctx => {
             } catch (error) {
                 ctx.body = {
                     code: 0,
-                    msg: error.error
+                    msg: error
                 }
             }
         }
@@ -85,7 +91,30 @@ router.post('/api/add', async ctx => {
 })
 
 // 修改
+router.post('/api/edit', async ctx => {
+    let create_time = new Date();
+    let { serial_num, remarks, types, sort, id } = ctx.request.body;
+    if (remarks && types && serial_num && id) {
+        try {
+            await query('update banner_list set serial_num=?, remarks=?, types=?, sort=?, create_time=? where id=?', [serial_num, remarks, types, sort, create_time, id])
+            ctx.body = {
+                code: 1,
+                msg: '修改成功'
+            }
+        } catch (error) {
+            ctx.body = {
+                code: 0,
+                msg: error
+            }
+        }
 
+    } else {
+        ctx.body = {
+            code: 2,
+            msg: '缺失参数'
+        }
+    }
+})
 
 
 app.listen(process.env.PORT || 3000, () => {
