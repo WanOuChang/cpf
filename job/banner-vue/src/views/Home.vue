@@ -8,13 +8,35 @@
 
         <el-dialog title="创建banner" :visible.sync="dialogFormVisible">
           <el-form :model="form">
-            <el-form-item label="序号" :label-width="formLabelWidth">
+            <el-form-item
+              label="序号"
+              :label-width="formLabelWidth"
+              prop="age"
+              :rules="[
+                { required: true, message: '序号不能为空'},
+                { type: 'number', message: '序号必须为数字值'}
+              ]"
+            >
               <el-input v-model="form.serial_num" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="备注" :label-width="formLabelWidth">
+            <el-form-item
+              label="备注"
+              :label-width="formLabelWidth"
+              prop="age"
+              :rules="[
+                { required: true, message: '备注不能为空'}
+              ]"
+            >
               <el-input v-model="form.remarks" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="类型" :label-width="formLabelWidth">
+            <el-form-item
+              label="链接"
+              :label-width="formLabelWidth"
+              prop="age"
+              :rules="[
+                { required: true, message: '链接不能为空'}
+              ]"
+            >
               <el-input v-model="form.types" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="排序" :label-width="formLabelWidth">
@@ -76,22 +98,30 @@ export default {
       formLabelWidth: "120px",
       id: null,
       currentPage4: 4,
-      limit:2,
-      pagenum:1,
-      total:0,
+      limit: 2,
+      pagenum: 1,
+      total: 0
     };
   },
   created() {
     this.getList();
   },
   methods: {
+    // 查询
     getList() {
-      this.$http.get("/api/getList").then(res => {
-        // console.log(res.data.data);n
-        this.tableData = res.data.data;
-        this.total=res.data.total
-      });
+      console.log("limit====", this.limit, "pagenum===", this.pagenum);
+      this.$http
+        .get("/api/getList", {
+          params: { limit: this.limit, pagenum: this.pagenum }
+        })
+        .then(res => {
+          console.log(res.data.data);
+          this.tableData = res.data.data;
+          this.total = res.data.total;
+        });
     },
+
+    // 添加/修改
     add() {
       let url = "";
       if (this.id) {
@@ -119,6 +149,8 @@ export default {
         this.reaset();
       });
     },
+
+    // 清空
     reaset() {
       this.form = {
         serial_num: "",
@@ -128,11 +160,16 @@ export default {
       };
       this.id = null;
     },
+
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.limit = val;
+      this.getList();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      this.pagenum = val;
+      this.getList();
     },
     handleEdit(index, row) {
       console.log(index, row);
