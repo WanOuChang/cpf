@@ -22,6 +22,11 @@ class ListService extends Service {
     async list(limit, startIndex) {
         return await this.app.mysql.query(`select * from yklist limit ${startIndex},${limit}`)
     }
+
+    // 总数
+    async total() {
+        return await this.app.mysql.query('select count(*) from yklist')
+    }
 }
 
 module.exports = ListService;

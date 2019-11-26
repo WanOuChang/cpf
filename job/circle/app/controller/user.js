@@ -2,20 +2,26 @@
 
 const Controller = require('egg').Controller;
 const jwt = require('jsonwebtoken')
-const createRule = {
-    username: 'string',
-    password: "password",
-};
+
 
 class UserController extends Controller {
 
     // 注册
     async registry() {
         let age = null
-        let { ctx, service, age } = this;
+        let { ctx, service } = this;
         let { username, password } = ctx.request.body;
+        let errors = await this.app.validator.validate({ username: 'string', password: 'password' }, ctx.request.body);
+        if (errors) {
+            ctx.body = {
+                code: 3,
+                msg: errors
+            }
+            return;
+        }
+
         try {
-            ctx.validate(createRule);
+            let hmasPwd = ctx.helper.hmas(password)
             let result = await service.user.find(username);
             if (result.length) {
                 ctx.body = {
@@ -24,7 +30,7 @@ class UserController extends Controller {
                 }
             } else {
                 try {
-                    await service.user.registry({ username, password, age })
+                    await service.user.registry({ username, hmasPwd, age })
                     ctx.body = {
                         code: 1,
                         msg: '注册成功',
@@ -42,16 +48,19 @@ class UserController extends Controller {
                 msg: error
             }
         }
+
+
     }
 
     // 登录
     async login() {
         let { ctx, service } = this;
         let { username, password } = ctx.request.body;
-        console.log(result)
+        let hmasPwd = ctx.helper.hmas(password)
+            // console.log(result)
         try {
             ctx.validate(createRule);
-            let result = await service.user.login({ username, password });
+            let result = await service.user.login({ username, hmasPwd });
             let userInfo = {
                 ...result[0]
             }

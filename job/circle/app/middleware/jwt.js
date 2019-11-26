@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const whiteList = [
-    '/registry',
-    '/login',
-    '/getList'
+    '/api/registry',
+    '/api/login',
+    '/api/getList'
 ]
 
 module.exports = () => {

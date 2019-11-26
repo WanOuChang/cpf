@@ -31,6 +31,9 @@ module.exports = appInfo => {
             },
             app: true,
             agent: false,
+        },
+        securify: {
+            csrf: false,
         }
     };
 

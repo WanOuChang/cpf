@@ -1,25 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import "./header.css"
 import { Icon, Modal } from 'antd'
 import { withRouter } from 'react-router-dom';
 const { confirm } = Modal;
 
-// function showDeleteConfirm(props) {
-//     confirm({
-//       title: '确定要退出吗？',
-//       content: 'Some descriptions',
-//       okText: '确定',
-//       okType: 'danger',
-//       cancelText: '取消',
-//       onOk() {
-//         localStorage.clear();
-//         props.history.push('/login')
-//       },
-//       onCancel() {
-//         console.log('Cancel');
-//       },
-//     });
-//   }
 
 function Header(props) {
     let { username, rolename } = props;
@@ -31,14 +15,19 @@ function Header(props) {
                     <span><Icon type="user"></Icon>{username}</span>
                     <span>{rolename}</span>
                 </div>
-                {/* <Button onClick={showDeleteConfirm} type="dashed">
-                <Icon type="logout" />
-                    退出
-                </Button> */}
                 <button 
                     onClick={() => {
-                        localStorage.clear();
-                        props.history.push('/login')
+                        confirm({
+                            title: '确定要退出吗？',
+                            content: 'Some descriptions',
+                            okText: '确定',
+                            okType: 'danger',
+                            cancelText: '取消',
+                            onOk() {
+                              localStorage.clear();
+                              props.history.push('/login')
+                            },
+                          });
                     }}
                 ><Icon type="logout" />退出</button>
             </div>

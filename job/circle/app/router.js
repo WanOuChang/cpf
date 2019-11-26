@@ -15,4 +15,5 @@ module.exports = app => {
     router.post('/api/editPassword', controller.user.editPassword);
     // 修改信息
     router.post('/api/editInfo', controller.user.editInfo);
+    // 
 };

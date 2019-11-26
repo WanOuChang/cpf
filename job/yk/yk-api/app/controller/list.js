@@ -1,15 +1,9 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-// const createRule = {
-//     title: 'string',
-//     author: 'string',
-//     significance: 'number',
-//     pageview: 'number',
-//     status: 'string'
-// };
 
 class ListController extends Controller {
+
     // 添加
     async add() {
         let { ctx, service } = this;
@@ -71,14 +65,17 @@ class ListController extends Controller {
     // 查询
     async list() {
         let { ctx, service } = this;
-        let { limit = 5, pagenum = 1 } = ctx.query;
+        let { limit, pagenum } = ctx.query;
         let startIndex = (pagenum - 1) * limit;
+        let total = await service.list.total();
+        console.log(total)
         try {
             let data = await service.list.list(limit, startIndex);
             ctx.body = {
                 code: 1,
                 msg: 'success',
                 data,
+                total: total[0]['count(*)']
             }
         } catch (error) {
             ctx.body = {

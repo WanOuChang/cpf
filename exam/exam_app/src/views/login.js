@@ -12,13 +12,14 @@ class login extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                // console.log('Received values of form: ', values);
                 axiox.post('/api/login', { username: values.username, password: values.password }).then(res => {
-                    console.log(res)
+                    // console.log(res)
                     if (res.data.code === 1) {
                         localStorage.setItem('token', res.data.token)
                         localStorage.setItem('userInfo', JSON.stringify({username:values.username,rolename:res.data.roleName}));
                         this.props.history.push('/home')
+                    }else{
+                        alert(res.data.msg)
                     }
                 })
             }
@@ -56,14 +57,14 @@ class login extends Component {
                             {getFieldDecorator('remember', {
                                 valuePropName: 'checked',
                                 initialValue: true,
-                            })(<Checkbox>Remember me</Checkbox>)}
+                            })(<Checkbox>记住密码</Checkbox>)}
                             <a className="login-form-forgot" href="">
-                                Forgot password
-                        </a>
+                                忘记密码
+                            </a>
                             <Button type="primary" htmlType="submit" className="login-form-button">
                                 登录
-                        </Button>
-                            Or <a href="">register now!</a>
+                            </Button>
+                            <a href="">注册!</a>
                         </Form.Item>
                     </Form>
                 </div>

@@ -40,6 +40,7 @@ export default class Main extends Component {
         rolename,
       })
       axios.get('/api/menu',{headers:{token}}).then(res => {
+        // console.log(res.data.data)
         if(res.data.code===1){
           this.setState({
             userInfo:res.data.data
@@ -52,7 +53,7 @@ export default class Main extends Component {
 
   render() {
     let { username,rolename, userInfo } = this.state;
-    console.log(userInfo)
+    // console.log(userInfo)
     return (
       <div id="box">
         <Headers username={username} rolename={rolename}/>
@@ -61,10 +62,10 @@ export default class Main extends Component {
             breakpoint="lg"
             collapsedWidth="0"
             onBreakpoint={broken => {
-              console.log(broken);
+              // console.log(broken);
             }}
             onCollapse={(collapsed, type) => {
-              console.log(collapsed, type);
+              // console.log(collapsed, type);
             }}
           >
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['9']}>

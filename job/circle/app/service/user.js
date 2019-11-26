@@ -10,13 +10,13 @@ class UserService extends Service {
     }
 
     // 注册
-    async registry({ username, password, age }) {
-        return await this.app.mysql.query('insert into userlist (username,password) values (?,?)', [username, password, age])
+    async registry({ username, hmasPwd, age }) {
+        return await this.app.mysql.query('insert into userlist (username,password) values (?,?)', [username, hmasPwd, age])
     }
 
     // 登录
-    async login({ username, password }) {
-        return await this.app.mysql.query('select * from userlist where username=? and password=?', [username, password])
+    async login({ username, hmasPwd }) {
+        return await this.app.mysql.query('select * from userlist where username=? and password=?', [username, hmasPwd])
     }
 
     // 注销

@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 
-const whiteList = [
-    '/api/login',
-    '/api/registry'
+let whiteList = [
+    "/api/login",
+    '/api/registry',
 ]
 
 module.exports = () => {
@@ -10,24 +10,22 @@ module.exports = () => {
         if (whiteList.includes(ctx.path)) {
             await next();
         } else {
-            let { token } = ctx.request.header;
+            let token = ctx.request.header.token;
             if (!token) {
                 ctx.body = {
-                    code: 2,
+                    code: 0,
                     msg: '没有权限',
                 }
                 return;
             }
 
             try {
-                let userInfo = jwt.verify(token, ctx.app.config.keys);
+                let info = jwt.verify(token, ctx.app.config.keys);
                 await next();
             } catch (error) {
-                if (error == 'TokenExpiredError') {
-                    ctx.body = {
-                        code: 0,
-                        msg: '登录过期请重新登录'
-                    }
+                ctx.body = {
+                    code: 0,
+                    msg: '登录已过期'
                 }
             }
         }
